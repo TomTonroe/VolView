@@ -24,6 +24,7 @@ import { VtkViewContext } from '@/src/components/vtk/context';
 import { Maybe } from '@/src/types';
 import { PaintMode } from '@/src/core/tools/paint';
 import { actionToKey } from '@/src/composables/useKeyboardShortcuts';
+import { useSegmentGroupStore } from '@/src/store/segmentGroups';
 
 export default defineComponent({
   name: 'PaintWidget2D',
@@ -51,11 +52,22 @@ export default defineComponent({
     const widgetFactory = paintStore.getWidgetFactory();
     const widgetState = widgetFactory.getWidgetState();
 
+    const segmentGroupStore = useSegmentGroupStore();
+
     const { metadata: imageMetadata } = useImage(imageId);
     const viewAxis = computed(() => getLPSAxisFromDir(viewDirection.value));
     const viewAxisIndex = computed(
       () => imageMetadata.value.lpsOrientation[viewAxis.value]
     );
+
+    const activeSegmentColor = computed(() => {
+      const groupID = paintStore.activeSegmentGroupID;
+      const segmentValue = paintStore.activeSegment;
+      if (!groupID || !segmentValue) return [0.5, 0.5, 0.5];
+      
+      const segment = segmentGroupStore.metadataByID[groupID]?.segments?.byValue[segmentValue];
+      return segment ? [segment.color[0] / 255, segment.color[1] / 255, segment.color[2] / 255] : [0.5, 0.5, 0.5];
+    });
 
     const worldPointToIndex = (worldPoint: vec3) => {
       const { worldToIndex } = imageMetadata.value;
@@ -181,6 +193,13 @@ export default defineComponent({
       view.renderWindowView
         .getContainer()
         ?.removeEventListener('wheel', handleWheelEvent);
+    watchEffect(() => {
+      const color = activeSegmentColor.value;
+      const rep = widget.getRepresentations().find((r: any) => r.getLabels?.()?.includes('brush'));
+      if (rep) {
+        rep.getActors()[0]?.getProperty()?.setColor(color[0], color[1], color[2]);
+        view.renderWindow.render();
+      }
     });
 
     return () => null;
