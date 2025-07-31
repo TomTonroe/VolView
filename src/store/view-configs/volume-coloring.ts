@@ -88,6 +88,7 @@ export const defaultVolumeColorConfig = (): VolumeColorConfig => ({
     diffuse: DEFAULT_DIFFUSE,
     specular: DEFAULT_SPECULAR,
   },
+  renderingMode: 'image',
 });
 
 export const useVolumeColoringStore = defineStore('volumeColoring', () => {
@@ -125,10 +126,11 @@ export const useVolumeColoringStore = defineStore('volumeColoring', () => {
       update: Partial<VolumeColorConfig[K]>
     ) => {
       const config = getConfig(viewID, dataID) ?? defaultVolumeColorConfig();
+      const currentValue = config[key];
       const updatedConfig = transform({
-        ...config[key],
+        ...(currentValue as Record<string, any>),
         ...update,
-      });
+      } as VolumeColorConfig[K]);
       updateConfig(viewID, dataID, { [key]: updatedConfig });
     };
   };
@@ -137,6 +139,14 @@ export const useVolumeColoringStore = defineStore('volumeColoring', () => {
   const updateColorTransferFunction = createUpdateFunc('transferFunction');
   const updateOpacityFunction = createUpdateFunc('opacityFunction');
   const updateCVRParameters = createUpdateFunc('cvr');
+
+  const setRenderingMode = (
+    viewID: string,
+    dataID: string,
+    mode: 'image' | 'segments'
+  ) => {
+    updateConfig(viewID, dataID, { renderingMode: mode });
+  };
 
   const setColorPreset = (viewID: string, imageID: string, preset: string) => {
     const imageCacheStore = useImageCacheStore();
@@ -214,6 +224,7 @@ export const useVolumeColoringStore = defineStore('volumeColoring', () => {
     updateColorTransferFunction,
     updateOpacityFunction,
     updateCVRParameters,
+    setRenderingMode,
     resetToDefaultColoring,
     setDefaults,
     setColorPreset,

@@ -248,6 +248,7 @@ const VolumeColorConfig = z.object({
   transferFunction: ColorTransferFunction,
   opacityFunction: OpacityFunction,
   cvr: CVRConfig,
+  renderingMode: z.union([z.literal('image'), z.literal('segments')]),
 }) satisfies z.ZodType<VolumeColorConfig>;
 
 const BlendConfig = z.object({

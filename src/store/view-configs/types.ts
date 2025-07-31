@@ -33,6 +33,7 @@ export interface VolumeColorConfig {
   transferFunction: ColorTransferFunction;
   opacityFunction: OpacityFunction;
   cvr: CVRConfig;
+  renderingMode: 'image' | 'segments';
 }
 
 export interface WindowLevelConfig {

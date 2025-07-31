@@ -18,10 +18,23 @@
           :view-direction="viewDirection"
           :view-up="viewUp"
         >
+          <!-- Render base image when in image mode -->
           <vtk-base-volume-representation
+            v-if="renderingMode === 'image'"
             :view-id="id"
             :image-id="currentImageID"
           ></vtk-base-volume-representation>
+
+          <!-- Render segmentations when in segments mode -->
+          <template v-if="renderingMode === 'segments'">
+            <vtk-segmentation-volume-representation
+              v-for="segmentationId in segmentations"
+              :key="segmentationId"
+              :view-id="id"
+              :segmentation-id="segmentationId"
+            ></vtk-segmentation-volume-representation>
+          </template>
+
           <vtk-orientation-marker></vtk-orientation-marker>
           <crop-tool :view-id="viewId" :image-id="currentImageID"></crop-tool>
           <slot></slot>
@@ -65,6 +78,7 @@ import VtkVolumeView from '@/src/components/vtk/VtkVolumeView.vue';
 import { VtkViewApi } from '@/src/types/vtk-types';
 import { LayoutViewProps } from '@/src/types';
 import VtkBaseVolumeRepresentation from '@/src/components/vtk/VtkBaseVolumeRepresentation.vue';
+import VtkSegmentationVolumeRepresentation from '@/src/components/vtk/VtkSegmentationVolumeRepresentation.vue';
 import { useViewAnimationListener } from '@/src/composables/useViewAnimationListener';
 import CropTool from '@/src/components/tools/crop/CropTool.vue';
 import { useWebGLWatchdog } from '@/src/composables/useWebGLWatchdog';
@@ -73,6 +87,7 @@ import ViewOverlayGrid from '@/src/components/ViewOverlayGrid.vue';
 import useVolumeColoringStore from '@/src/store/view-configs/volume-coloring';
 import { useResetViewsEvents } from '@/src/components/tools/ResetViews.vue';
 import { onVTKEvent } from '@/src/composables/onVTKEvent';
+import { useSegmentGroupStore } from '@/src/store/segmentGroups';
 
 interface Props extends LayoutViewProps {
   viewDirection: LPSAxisDir;
@@ -103,13 +118,23 @@ onVTKEvent(currentImageData, 'onModified', () => {
   vtkView.value?.requestRender();
 });
 
-// color preset
+// segmentations
+const segmentGroupStore = useSegmentGroupStore();
+const segmentations = computed(() => {
+  if (!currentImageID.value) return [];
+  return segmentGroupStore.orderByParent[currentImageID.value] ?? [];
+});
+
+// color preset and rendering mode
 const coloringStore = useVolumeColoringStore();
 const coloringConfig = computed(() =>
   coloringStore.getConfig(viewId.value, currentImageID.value)
 );
 const presetName = computed(
   () => coloringConfig.value?.transferFunction.preset.replace(/-/g, ' ') ?? ''
+);
+const renderingMode = computed(
+  () => coloringConfig.value?.renderingMode ?? 'image'
 );
 </script>
 

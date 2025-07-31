@@ -26,6 +26,21 @@ export default defineComponent({
       volumeColoringStore.getConfig(TARGET_VIEW_ID, currentImageID.value)
     );
 
+    // --- Rendering Mode --- //
+
+    const renderingMode = computed(
+      () => volumeColorConfig.value?.renderingMode ?? 'image'
+    );
+
+    const setRenderingMode = (mode: 'image' | 'segments') => {
+      if (!currentImageID.value) return;
+      volumeColoringStore.setRenderingMode(
+        TARGET_VIEW_ID,
+        currentImageID.value,
+        mode
+      );
+    };
+
     // --- CVR --- //
 
     const cvrParams = computed(() => volumeColorConfig.value?.cvr);
@@ -71,8 +86,10 @@ export default defineComponent({
       disableQualityWarning,
       laoEnabled,
       lightingModel,
+      renderingMode,
       selectLightingMode,
       setCVRParam,
+      setRenderingMode,
       showQualityWarning,
       volumeQualityLabels,
       vsbEnabled,
@@ -83,6 +100,27 @@ export default defineComponent({
 
 <template>
   <div class="mx-2">
+    <!-- Rendering Mode Toggle -->
+    <v-row class="mb-4">
+      <v-btn-toggle
+        :model-value="renderingMode"
+        @update:model-value="setRenderingMode"
+        mandatory
+        divided
+        variant="outlined"
+        class="w-100"
+      >
+        <v-btn value="image" class="w-50">
+          <v-icon class="mr-2">mdi-image</v-icon>
+          Image
+        </v-btn>
+        <v-btn value="segments" class="w-50">
+          <v-icon class="mr-2">mdi-layers</v-icon>
+          Segments
+        </v-btn>
+      </v-btn-toggle>
+    </v-row>
+
     <div v-if="!!cvrParams">
       <v-slider
         show-ticks="always"
