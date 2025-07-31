@@ -197,10 +197,16 @@ export default defineComponent({
 
     watchEffect(() => {
       const color = activeSegmentColor.value;
-      const rep = widget.getRepresentations().find((r: any) => r.getLabels?.()?.includes('brush'));
-      if (rep) {
-        rep.getActors()[0]?.getProperty()?.setColor(color[0], color[1], color[2]);
-        view.renderWindow.render();
+      const reps = widget.getRepresentations();
+      const brushRep = reps.find((r: any) => r.getLabels?.()?.includes('brush'));
+      
+      if (brushRep) {
+        const actors = brushRep.getActors();
+        const actor = actors[0];
+        if (actor?.getProperty) {
+          actor.getProperty().setColor(color[0], color[1], color[2]);
+          view.requestRender({ immediate: false });
+        }
       }
     });
 
