@@ -193,6 +193,8 @@ export default defineComponent({
       view.renderWindowView
         .getContainer()
         ?.removeEventListener('wheel', handleWheelEvent);
+    });
+
     watchEffect(() => {
       const color = activeSegmentColor.value;
       const rep = widget.getRepresentations().find((r: any) => r.getLabels?.()?.includes('brush'));
