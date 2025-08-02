@@ -26,6 +26,7 @@ export const usePaintToolStore = defineStore('paint', () => {
   const brushSize = ref(DEFAULT_BRUSH_SIZE);
   const strokePoints = ref<vec3[]>([]);
   const isActive = ref(false);
+  const isPainting = ref(false);
   const thresholdRange = ref<Vector2>([...DEFAULT_THRESHOLD_RANGE]);
 
   const { currentImageID, currentImageData } = useCurrentImage();
@@ -224,6 +225,7 @@ export const usePaintToolStore = defineStore('paint', () => {
 
   function startStroke(this: _This, indexPoint: vec3, axisIndex: 0 | 1 | 2) {
     ensureSegmentGroup();
+    isPainting.value = true;
     strokePoints.value = [vec3.clone(indexPoint)];
     doPaintStroke.call(this, axisIndex);
   }
@@ -240,6 +242,7 @@ export const usePaintToolStore = defineStore('paint', () => {
   function endStroke(this: _This, indexPoint: vec3, axisIndex: 0 | 1 | 2) {
     strokePoints.value.push(indexPoint);
     doPaintStroke.call(this, axisIndex);
+    isPainting.value = false;
   }
 
   const currentImageStats = computed(() => {
@@ -278,6 +281,7 @@ export const usePaintToolStore = defineStore('paint', () => {
 
   function deactivateTool() {
     isActive.value = false;
+    isPainting.value = false;
   }
 
   function setThresholdRange(this: _This, range: Vector2) {
@@ -316,6 +320,7 @@ export const usePaintToolStore = defineStore('paint', () => {
     brushSize,
     strokePoints,
     isActive,
+    isPainting,
     thresholdRange,
 
     getWidgetFactory,

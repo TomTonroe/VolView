@@ -20,6 +20,7 @@ import { useCropStore } from '@/src/store/tools/crop';
 import { useEventListener } from '@vueuse/core';
 import useLayerColoringStore from '@/src/store/view-configs/layers';
 import useVolumeColoringStore from '@/src/store/view-configs/volume-coloring';
+import { usePaintToolStore } from '@/src/store/tools/paint';
 import {
   setCinematicLighting,
   setCinematicVolumeShading,
@@ -97,7 +98,6 @@ watch(updatedExtents, (current, old) => {
   view.requestRender();
 });
 
-onVTKEvent(imageData, 'onModified', view.requestRender);
 
 useSegmentGroupConfigInitializer(viewId.value, segmentationId.value);
 const coloringStore = useLayerColoringStore();
@@ -166,6 +166,23 @@ const center = computed((): [number, number, number] => {
   return [centerArray[0], centerArray[1], centerArray[2]];
 });
 const isAnimating = isViewAnimating(view);
+
+// Paint state detection for performance optimization
+const paintStore = usePaintToolStore();
+
+watch(() => paintStore.isPainting, (painting) => {
+  if (!painting) {
+    // Stroke ended - update volume with latest changes
+    view.requestRender();
+  }
+});
+
+onVTKEvent(imageData, 'onModified', () => {
+  // Skip rendering during painting for performance
+  if (!paintStore.isPainting) {
+    view.requestRender();
+  }
+});
 
 watchEffect(() => {
   const img = imageData.value;
