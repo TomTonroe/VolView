@@ -136,6 +136,11 @@
             :image-id="currentImageID"
             :view-direction="viewDirection"
           />
+          <point-tool
+            :view-id="viewId"
+            :image-id="currentImageID"
+            :view-direction="viewDirection"
+          />
           <rectangle-tool
             :view-id="viewId"
             :image-id="currentImageID"
@@ -177,6 +182,7 @@ import CrosshairsTool from '@/src/components/tools/crosshairs/CrosshairsTool.vue
 import PaintTool from '@/src/components/tools/paint/PaintTool.vue';
 import PolygonTool from '@/src/components/tools/polygon/PolygonTool.vue';
 import RulerTool from '@/src/components/tools/ruler/RulerTool.vue';
+import PointTool from '@/src/components/tools/point/PointTool.vue';
 import RectangleTool from '@/src/components/tools/rectangle/RectangleTool.vue';
 import SelectTool from '@/src/components/tools/SelectTool.vue';
 import ScalarProbe from '@/src/components/tools/ScalarProbe.vue';
