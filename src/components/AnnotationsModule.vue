@@ -27,6 +27,10 @@ const MeasurementTools = [
     type: AnnotationToolType.Polygon,
     icon: 'mdi-pentagon-outline',
   },
+  {
+    type: AnnotationToolType.Point,
+    icon: 'mdi-record-circle-outline',
+  },
 ];
 
 const MeasurementToolTypes = new Set<string>(

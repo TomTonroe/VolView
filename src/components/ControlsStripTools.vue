@@ -108,6 +108,19 @@
       </menu-control-button>
     </groupable-item>
 
+    <groupable-item v-slot:default="{ active, toggle }" :value="Tools.Point">
+      <menu-control-button
+        icon="mdi-record-circle-outline"
+        :name="`Point [${nameToShortcut['Point']}]`"
+        :mobileOnlyMenu="true"
+        :active="active"
+        :disabled="noCurrentImage || isObliqueLayout"
+        @click="toggle"
+      >
+        <point-controls />
+      </menu-control-button>
+    </groupable-item>
+
     <div class="my-1 tool-separator" />
     <groupable-item v-slot:default="{ active, toggle }" :value="Tools.Crop">
       <menu-control-button
@@ -142,6 +155,7 @@ import ResetViews from '@/src/components/tools/ResetViews.vue';
 import RulerControls from '@/src/components/RulerControls.vue';
 import RectangleControls from '@/src/components/RectangleControls.vue';
 import PolygonControls from '@/src/components/PolygonControls.vue';
+import PointControls from '@/src/components/PointControls.vue';
 import WindowLevelControls from '@/src/components/tools/windowing/WindowLevelControls.vue';
 import { actionToKey } from '@/src/composables/useKeyboardShortcuts';
 
@@ -156,6 +170,7 @@ export default defineComponent({
     RulerControls,
     RectangleControls,
     PolygonControls,
+    PointControls,
     WindowLevelControls,
   },
   setup() {
@@ -202,6 +217,7 @@ export default defineComponent({
         Rectangle: keyMap.rectangle,
         Polygon: keyMap.polygon,
         Ruler: keyMap.ruler,
+        Point: keyMap.point,
         Crop: keyMap.crop,
       };
     });

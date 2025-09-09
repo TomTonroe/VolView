@@ -6,6 +6,7 @@ import { Tools } from '../store/tools/types';
 import RectangleControls from './RectangleControls.vue';
 import RulerControls from './RulerControls.vue';
 import PolygonControls from './PolygonControls.vue';
+import PointControls from './PointControls.vue';
 
 const toolStore = useToolStore();
 
@@ -13,6 +14,7 @@ const tools = new Map([
   [Tools.Rectangle, { component: RectangleControls, label: 'Rectangle' }],
   [Tools.Ruler, { component: RulerControls, label: 'Ruler' }],
   [Tools.Polygon, { component: PolygonControls, label: 'Polygon' }],
+  [Tools.Point, { component: PointControls, label: 'Point' }],
   [Tools.Paint, { component: PaintControls, label: 'Paint' }],
 ]);
 
