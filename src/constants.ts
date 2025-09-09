@@ -44,6 +44,9 @@ export const ACTIONS = {
   rectangle: {
     readable: 'Activate Rectangle tool',
   },
+  point: {
+    readable: 'Activate Point tool',
+  },
   crosshairs: {
     readable: 'Activate Crosshairs tool',
   },

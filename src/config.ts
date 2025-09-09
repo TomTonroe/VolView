@@ -249,6 +249,10 @@ export const POLYGON_LABEL_DEFAULTS = {
   'Label 1': { color: 'red' },
 };
 
+export const POINT_LABEL_DEFAULTS = {
+  'Label 1': { color: 'red' },
+};
+
 export const DEFAULT_PRESET_BY_MODALITY: Record<string, string> = {
   CT: 'CT-AAA',
   MR: 'CT-Coronary-Arteries-2',
@@ -275,6 +279,7 @@ export const ACTION_TO_KEY = {
   temporaryCrosshairs: 'shift-c',
   crop: 'b',
   polygon: 'g',
+  point: 't',
   mergeNewPolygon: 'Shift',
   select: 's',
 
