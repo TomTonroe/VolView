@@ -10,6 +10,7 @@ import { useRulerStore } from './rulers';
 import { useRectangleStore } from './rectangles';
 import { AnnotationToolType, IToolStore, Tools } from './types';
 import { usePolygonStore } from './polygons';
+import { usePointStore } from './points';
 
 // TODO move these types out
 export const AnnotationToolStoreMap: Record<
@@ -19,6 +20,7 @@ export const AnnotationToolStoreMap: Record<
   [AnnotationToolType.Polygon]: usePolygonStore,
   [AnnotationToolType.Rectangle]: useRectangleStore,
   [AnnotationToolType.Ruler]: useRulerStore,
+  [AnnotationToolType.Point]: usePointStore,
 } as const;
 
 export const ToolStoreMap: Record<Tools, Maybe<() => IToolStore>> = {
