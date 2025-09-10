@@ -1,4 +1,5 @@
 import macro from '@kitware/vtk.js/macros';
+import bounds from '@kitware/vtk.js/Widgets/Core/StateBuilder/boundsMixin';
 import vtkAnnotationWidgetState from '@/src/vtk/ToolWidgetUtils/annotationWidgetState';
 import { AnnotationToolType } from '@/src/store/tools/types';
 import createPointState from '../ToolWidgetUtils/pointState';
@@ -27,6 +28,7 @@ const defaultValues = (initialValues: any) => ({
 function _createPointWidgetState(publicAPI: any, model: any, initialValues: any) {
   Object.assign(model, defaultValues(initialValues));
   vtkAnnotationWidgetState.extend(publicAPI, model, initialValues);
+  bounds.extend(publicAPI, model);
 
   macro.setGet(publicAPI, model, ['isPlaced']);
 
